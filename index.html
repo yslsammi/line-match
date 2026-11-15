@@ -32,14 +32,13 @@
       user-select: none;
       -webkit-user-select: none;
       -webkit-touch-callout: none;
-      touch-action: none;
     }
 
     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
-      height: 100%;
+      height: 100dvh;
       overflow: hidden;
       background-color: var(--bg-color);
       color: var(--text-color);
@@ -47,23 +46,46 @@
       transition: background-color 0.3s ease, color 0.3s ease;
     }
 
+    /* 遊戲連線舞台鎖定觸控避免誤拖網頁，其他選單則開放上下滑動 */
+    #connect-stage, #connect-stage * {
+      touch-action: none;
+    }
+
+    #start-overlay, #break-overlay, #teacher-panel, .panel-card {
+      touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* 美化明顯捲軸方便視覺辨識 */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 5px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 0, 0.55);
+      border-radius: 5px;
+    }
+
     /* === 頂部狀態欄 === */
     #top-bar {
       position: fixed;
-      top: 12px;
-      left: 78px;
-      right: 16px;
+      top: 10px;
+      left: 74px;
+      right: 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       z-index: 30;
-      gap: 8px;
+      gap: 6px;
     }
 
     .top-badges-left {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
     }
 
@@ -71,9 +93,9 @@
       background: #FF453A;
       color: #FFFFFF;
       border: 3px solid #FFFFFF;
-      border-radius: 20px;
-      padding: 8px 15px;
-      font-size: 1.05rem;
+      border-radius: 18px;
+      padding: 6px 13px;
+      font-size: 0.98rem;
       font-weight: 900;
       cursor: pointer;
       white-space: nowrap;
@@ -88,23 +110,23 @@
       background: var(--card-bg);
       border: 3px solid var(--card-border);
       color: var(--text-color);
-      padding: 7px 14px;
-      border-radius: 20px;
-      font-size: 1rem;
+      padding: 6px 12px;
+      border-radius: 18px;
+      font-size: 0.92rem;
       font-weight: 900;
       white-space: nowrap;
     }
 
     #progress-bar-container {
       display: flex;
-      gap: 6px;
+      gap: 5px;
       flex-wrap: wrap;
       justify-content: center;
     }
 
     .progress-dot {
-      width: 15px;
-      height: 15px;
+      width: 13px;
+      height: 13px;
       border-radius: 50%;
       border: 3px solid var(--card-border);
       background-color: transparent;
@@ -119,16 +141,16 @@
     .top-actions-right {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     #clear-wrong-btn {
       background: #FF9500;
       color: #000000;
       border: 3px solid #000000;
-      border-radius: 22px;
-      padding: 8px 14px;
-      font-size: 1.05rem;
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 0.98rem;
       font-weight: 900;
       cursor: pointer;
       display: none;
@@ -139,14 +161,14 @@
       background: #FFFF00;
       color: #000000;
       border: 3px solid #000000;
-      border-radius: 22px;
-      padding: 8px 16px;
-      font-size: 1.1rem;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 1.02rem;
       font-weight: 900;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
       white-space: nowrap;
     }
@@ -155,25 +177,27 @@
       transform: scale(0.95);
     }
 
-    /* === 主遊戲區 === */
+    /* === 主遊戲區（精準適應視窗高度，保證 100% 完整顯示不出界） === */
     #main-container {
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100dvh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 72px 16px 18px 16px;
-      gap: 8px;
+      justify-content: space-between;
+      padding: 66px 14px 14px 14px;
+      gap: 6px;
+      overflow: hidden;
     }
 
     #prompt-banner {
-      font-size: clamp(1.75rem, 3.6vw, 2.7rem);
+      font-size: clamp(1.35rem, 2.8vw, 2.3rem);
       font-weight: 900;
       text-align: center;
       color: var(--text-color);
-      letter-spacing: 1.5px;
-      min-height: 1.3em;
+      letter-spacing: 1px;
+      line-height: 1.25;
+      flex-shrink: 0;
       z-index: 20;
     }
 
@@ -183,10 +207,11 @@
       width: 100%;
       max-width: 1240px;
       flex: 1;
+      min-height: 0;
       display: flex;
-      align-items: center;
+      align-items: stretch;
       justify-content: space-between;
-      padding: 6px clamp(18px, 4.5vw, 56px);
+      padding: 4px clamp(14px, 4vw, 52px);
     }
 
     /* SVG 特粗手繪連線層 */
@@ -203,65 +228,78 @@
     .column-stack {
       display: flex;
       flex-direction: column;
-      justify-content: space-around;
+      justify-content: space-evenly;
       align-items: center;
       height: 100%;
+      min-height: 0;
       z-index: 15;
-      gap: 12px;
+      gap: 8px;
     }
 
-    /* === 特大高對比圖案卡片 === */
+    /* === 特大高對比圖案卡片（依據 1/2/3 組題目與螢幕高度自動調整大小） === */
     .node-card {
       position: relative;
-      width: clamp(185px, 23vw, 265px);
-      height: clamp(160px, 25vh, 235px);
       background-color: var(--card-bg);
-      border: 8px solid var(--card-border);
-      border-radius: 32px;
+      border: 7px solid var(--card-border);
+      border-radius: 28px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
       transition: transform 0.16s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
-    /* 單組或兩組題目時進一步放大卡片與圖案 */
+    /* 1 組題目（特大卡片） */
     #connect-stage.count-1 .node-card {
-      width: clamp(230px, 27vw, 320px);
-      height: clamp(220px, 38vh, 310px);
+      width: min(38vw, 310px);
+      height: min(44dvh, 290px);
     }
-
     #connect-stage.count-1 .node-emoji {
-      font-size: clamp(5.8rem, 11vw, 8.2rem);
+      font-size: clamp(5rem, 11vw, 7.8rem);
     }
-
     #connect-stage.count-1 .node-label {
-      font-size: clamp(1.65rem, 3vw, 2.2rem);
+      font-size: clamp(1.5rem, 2.8vw, 2.1rem);
     }
 
+    /* 2 組題目（平衡大卡片，保證上下完整顯示） */
     #connect-stage.count-2 .node-card {
-      width: clamp(205px, 24vw, 285px);
-      height: clamp(185px, 29vh, 255px);
+      width: min(35vw, 265px);
+      height: min(34dvh, 225px);
+    }
+    #connect-stage.count-2 .node-emoji {
+      font-size: clamp(3.8rem, 7.5vw, 5.8rem);
+    }
+    #connect-stage.count-2 .node-label {
+      font-size: clamp(1.2rem, 2.1vw, 1.65rem);
     }
 
-    #connect-stage.count-2 .node-emoji {
-      font-size: clamp(4.8rem, 8.8vw, 6.8rem);
+    /* 3 組題目（緊湊高對比大卡片，三行完全不超出螢幕） */
+    #connect-stage.count-3 .node-card {
+      width: min(32vw, 235px);
+      height: min(23dvh, 165px);
+      border-width: 6px;
+      border-radius: 24px;
+    }
+    #connect-stage.count-3 .node-emoji {
+      font-size: clamp(2.8rem, 5.5vw, 4.3rem);
+    }
+    #connect-stage.count-3 .node-label {
+      font-size: clamp(1.05rem, 1.7vw, 1.38rem);
+      margin-top: 3px;
     }
 
     .node-emoji {
-      font-size: clamp(4.2rem, 7.6vw, 6rem);
       line-height: 1.05;
       pointer-events: none;
       filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45));
     }
 
     .node-label {
-      font-size: clamp(1.3rem, 2.3vw, 1.75rem);
       font-weight: 900;
       color: var(--subtext-color);
-      margin-top: 8px;
+      margin-top: 6px;
       pointer-events: none;
       letter-spacing: 1px;
     }
@@ -269,8 +307,8 @@
     /* === 特大發光連接圓珠（視覺錨點） === */
     .anchor-dot {
       position: absolute;
-      width: 42px;
-      height: 42px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       background-color: #FFFF00;
       border: 5px solid #000000;
@@ -281,30 +319,30 @@
     }
 
     .left-node .anchor-dot {
-      right: -25px;
+      right: -23px;
     }
 
     .right-node .anchor-dot {
-      left: -25px;
+      left: -23px;
     }
 
     /* 狀態樣式 */
     .node-card.active-drag {
       border-color: #00FF66 !important;
-      transform: scale(1.07);
-      box-shadow: 0 0 40px rgba(0, 255, 102, 0.95);
+      transform: scale(1.05);
+      box-shadow: 0 0 36px rgba(0, 255, 102, 0.95);
     }
 
     .node-card.hover-target {
       border-color: #00E5FF !important;
       background-color: rgba(0, 229, 255, 0.24);
-      transform: scale(1.09);
-      box-shadow: 0 0 44px rgba(0, 229, 255, 1);
+      transform: scale(1.06);
+      box-shadow: 0 0 40px rgba(0, 229, 255, 1);
     }
 
     .node-card.matched {
       border-color: #00FF66 !important;
-      box-shadow: 0 0 32px rgba(0, 255, 102, 0.75);
+      box-shadow: 0 0 28px rgba(0, 255, 102, 0.75);
     }
 
     .node-card.matched .anchor-dot {
@@ -315,12 +353,12 @@
     /* 教師設定按鈕（左上角齒輪） */
     #teacher-trigger {
       position: fixed;
-      top: 12px;
-      left: 14px;
-      width: 54px;
-      height: 54px;
+      top: 10px;
+      left: 12px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
-      background: rgba(80, 85, 95, 0.78);
+      background: rgba(80, 85, 95, 0.82);
       border: 2px solid rgba(255, 255, 255, 0.35);
       display: flex;
       align-items: center;
@@ -330,12 +368,12 @@
     }
 
     #teacher-trigger svg.gear-icon {
-      width: 26px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
       fill: #FFFFFF;
     }
 
-    /* 啟動與休息遮罩畫面 */
+    /* 啟動與休息遮罩畫面（支援上下滑動捲動） */
     #start-overlay, #break-overlay {
       position: fixed;
       inset: 0;
@@ -343,44 +381,40 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: safe center;
       z-index: 100;
-      padding: 20px;
+      padding: 28px 20px 44px 20px;
       text-align: center;
       overflow-y: auto;
     }
 
-    #start-overlay *, #break-overlay *, #teacher-panel * {
-      touch-action: manipulation;
-    }
-
     .start-subtitle {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       color: #00E5FF;
       font-weight: 800;
-      margin: 6px 0 24px 0;
+      margin: 6px 0 20px 0;
       max-width: 700px;
-      line-height: 1.6;
+      line-height: 1.55;
     }
 
     .demo-diagram {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 20px;
+      gap: 18px;
       background: #181E29;
       border: 4px solid #FFFF00;
-      border-radius: 28px;
-      padding: 20px 36px;
-      margin-bottom: 28px;
+      border-radius: 26px;
+      padding: 16px 32px;
+      margin-bottom: 24px;
     }
 
     .demo-box {
-      font-size: 4rem;
+      font-size: 3.6rem;
     }
 
     .demo-line {
-      width: 140px;
+      width: 130px;
       height: 14px;
       border-radius: 7px;
       background: linear-gradient(90deg, #FFFF00, #00FF66);
@@ -390,7 +424,7 @@
     .start-actions-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 16px;
+      gap: 14px;
       justify-content: center;
     }
 
@@ -398,12 +432,12 @@
       background-color: #FFFF00;
       color: #000000;
       border: none;
-      border-radius: 24px;
-      padding: 20px 46px;
-      font-size: 1.85rem;
+      border-radius: 22px;
+      padding: 18px 40px;
+      font-size: 1.7rem;
       font-weight: 900;
       cursor: pointer;
-      box-shadow: 0 0 32px rgba(255, 255, 0, 0.55);
+      box-shadow: 0 0 28px rgba(255, 255, 0, 0.55);
     }
 
     .big-start-btn:active {
@@ -414,9 +448,9 @@
       background-color: #00E5FF;
       color: #000000;
       border: none;
-      border-radius: 24px;
-      padding: 20px 30px;
-      font-size: 1.35rem;
+      border-radius: 22px;
+      padding: 18px 26px;
+      font-size: 1.25rem;
       font-weight: 900;
       cursor: pointer;
     }
@@ -426,12 +460,12 @@
     }
 
     .trophy-icon {
-      font-size: 5.5rem;
-      margin-bottom: 8px;
+      font-size: 5rem;
+      margin-bottom: 6px;
     }
 
     .break-title {
-      font-size: 2.4rem;
+      font-size: 2.2rem;
       font-weight: 900;
       color: #FFFF00;
       margin: 6px 0;
@@ -441,23 +475,24 @@
       background: #181E29;
       border: 2px solid #444;
       border-radius: 18px;
-      padding: 16px 32px;
-      margin: 18px 0;
+      padding: 14px 28px;
+      margin: 16px 0;
       color: #FFFFFF;
-      font-size: 1.25rem;
-      line-height: 1.8;
+      font-size: 1.2rem;
+      line-height: 1.75;
     }
 
-    /* 教師設定面板 */
+    /* 教師設定面板（支援順暢上下滑動） */
     #teacher-panel {
       position: fixed;
       inset: 0;
-      background-color: rgba(0, 0, 0, 0.85);
+      background-color: rgba(0, 0, 0, 0.86);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 200;
-      padding: 16px;
+      padding: 14px;
+      overflow-y: auto;
     }
 
     .panel-card {
@@ -465,11 +500,11 @@
       color: #FFFFFF;
       width: 100%;
       max-width: 820px;
-      max-height: 90vh;
+      max-height: 88dvh;
       overflow-y: auto;
       border-radius: 22px;
       border: 2px solid var(--border-color);
-      padding: 24px;
+      padding: 22px;
     }
 
     .panel-header {
@@ -477,51 +512,51 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--border-color);
-      padding-bottom: 14px;
-      margin-bottom: 18px;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
     }
 
     .panel-header h2 {
       margin: 0;
-      font-size: 1.4rem;
+      font-size: 1.35rem;
       color: #FFFF00;
     }
 
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 10px;
+      margin-bottom: 18px;
     }
 
     .stat-box {
       background: #232732;
-      padding: 12px;
+      padding: 10px;
       border-radius: 12px;
       text-align: center;
     }
 
     .stat-value {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 900;
       color: #00FF66;
     }
 
     .stat-label {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: #CCCCCC;
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
     .setting-group {
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .setting-group label {
       display: block;
       font-weight: 800;
-      margin-bottom: 8px;
-      font-size: 1.05rem;
+      margin-bottom: 7px;
+      font-size: 1.02rem;
       color: #EFEFEF;
     }
 
@@ -536,8 +571,8 @@
       color: #FFFFFF;
       border: 2px solid #484E60;
       border-radius: 12px;
-      padding: 10px 14px;
-      font-size: 0.94rem;
+      padding: 9px 13px;
+      font-size: 0.92rem;
       font-weight: 700;
       cursor: pointer;
     }
@@ -552,15 +587,15 @@
       display: flex;
       justify-content: space-between;
       gap: 12px;
-      margin-top: 22px;
-      padding-top: 16px;
+      margin-top: 20px;
+      padding-top: 14px;
       border-top: 1px solid var(--border-color);
     }
 
     .action-btn {
-      padding: 12px 24px;
+      padding: 12px 22px;
       border-radius: 12px;
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       font-weight: 800;
       cursor: pointer;
       border: none;
@@ -582,6 +617,17 @@
       border-radius: 50%;
       pointer-events: none;
       z-index: 60;
+    }
+
+    /* 針對直向螢幕或較窄視窗微調頂部間距 */
+    @media (max-width: 780px) {
+      #main-container {
+        padding-top: 102px;
+      }
+      #connect-stage {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
     }
   </style>
 </head>
@@ -620,7 +666,7 @@
 
   <!-- 啟動畫面 -->
   <div id="start-overlay">
-    <h1 style="font-size: 2.6rem; color: #FFFF00; margin: 4px 0;">✨ 光影連連看</h1>
+    <h1 style="font-size: 2.5rem; color: #FFFF00; margin: 4px 0;">✨ 光影連連看</h1>
     <div class="start-subtitle">特大高對比圖案 ＋ 特粗發光連線軌跡！<br/>自由畫出你嘅連線，靠近右邊圖案即自動磁吸成功！</div>
 
     <div class="demo-diagram">
@@ -638,7 +684,7 @@
   <!-- 回合休息獎勵畫面 -->
   <div id="break-overlay">
     <div class="trophy-icon">🏆</div>
-    <div class="break-title">好叻喎！全部連啱晒！</div>
+    <div class="break-title">做得好！全部連啱晒！</div>
     <div class="break-stats" id="break-stats-text"></div>
     <div class="start-actions-row">
       <button class="big-start-btn" id="continue-btn">繼續下一回合</button>
@@ -651,7 +697,7 @@
     <div class="panel-card">
       <div class="panel-header">
         <h2>👩‍🏫 光影連連看 － 教師設定</h2>
-        <span style="font-size: 0.9rem; color: #AAA;">特大圖案 ＋ 特粗發光軌跡</span>
+        <span style="font-size: 0.88rem; color: #AAA;">可上下滑動查看全部設定</span>
       </div>
 
       <div class="stats-grid">
@@ -1280,11 +1326,11 @@
       updateStatsUI();
 
       const lastPair = runtime.pairs[runtime.pairs.length - 1];
-      promptBanner.textContent = `好叻喎！連啱晒啦！`;
+      promptBanner.textContent = `做得好！連啱晒啦！`;
       if (runtime.pairs.length === 1) {
-        speakCantonese(`好叻喎！${lastPair.leftName}連${lastPair.rightName}！`);
+        speakCantonese(`做得好！${lastPair.leftName}連${lastPair.rightName}！`);
       } else {
-        speakCantonese('好叻喎！全部都連啱晒啦！');
+        speakCantonese('做得好！全部都連啱晒啦！');
       }
 
       const isEndOfRound = (s.roundLimit > 0 && runtime.roundCompleted >= s.roundLimit);
@@ -1456,7 +1502,7 @@
     function showRoundBreak() {
       runtime.isPaused = true;
       playMatchSuccessSound();
-      speakCantonese('好叻喎！完成一回合連線訓練啦，休息一陣先！');
+      speakCantonese('做得好！完成一回合連線訓練啦，休息一陣先！');
 
       const levelNames = {
         single1: '1 條直線',
