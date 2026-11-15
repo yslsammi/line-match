@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>光影連連看 - 自由手繪軌跡與寬容磁吸連線訓練</title>
+  <title>光影連連看 - 特大高對比圖案與特粗發光連線訓練</title>
   <style>
     :root {
       --bg-color: #090C12;
@@ -73,7 +73,7 @@
       border: 3px solid #FFFFFF;
       border-radius: 20px;
       padding: 8px 15px;
-      font-size: 1.02rem;
+      font-size: 1.05rem;
       font-weight: 900;
       cursor: pointer;
       white-space: nowrap;
@@ -90,7 +90,7 @@
       color: var(--text-color);
       padding: 7px 14px;
       border-radius: 20px;
-      font-size: 0.98rem;
+      font-size: 1rem;
       font-weight: 900;
       white-space: nowrap;
     }
@@ -103,8 +103,8 @@
     }
 
     .progress-dot {
-      width: 14px;
-      height: 14px;
+      width: 15px;
+      height: 15px;
       border-radius: 50%;
       border: 3px solid var(--card-border);
       background-color: transparent;
@@ -128,7 +128,7 @@
       border: 3px solid #000000;
       border-radius: 22px;
       padding: 8px 14px;
-      font-size: 1.02rem;
+      font-size: 1.05rem;
       font-weight: 900;
       cursor: pointer;
       display: none;
@@ -141,7 +141,7 @@
       border: 3px solid #000000;
       border-radius: 22px;
       padding: 8px 16px;
-      font-size: 1.08rem;
+      font-size: 1.1rem;
       font-weight: 900;
       cursor: pointer;
       display: flex;
@@ -163,12 +163,12 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 74px 20px 24px 20px;
-      gap: 10px;
+      padding: 72px 16px 18px 16px;
+      gap: 8px;
     }
 
     #prompt-banner {
-      font-size: clamp(1.65rem, 3.4vw, 2.55rem);
+      font-size: clamp(1.75rem, 3.6vw, 2.7rem);
       font-weight: 900;
       text-align: center;
       color: var(--text-color);
@@ -181,15 +181,15 @@
     #connect-stage {
       position: relative;
       width: 100%;
-      max-width: 1120px;
+      max-width: 1240px;
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px clamp(16px, 5vw, 64px);
+      padding: 6px clamp(18px, 4.5vw, 56px);
     }
 
-    /* SVG 手繪連線層 */
+    /* SVG 特粗手繪連線層 */
     #lines-svg {
       position: absolute;
       inset: 0;
@@ -207,83 +207,109 @@
       align-items: center;
       height: 100%;
       z-index: 15;
-      gap: 14px;
+      gap: 12px;
     }
 
-    /* 左右兩側圖案卡片 */
+    /* === 特大高對比圖案卡片 === */
     .node-card {
       position: relative;
-      width: clamp(148px, 19vw, 215px);
-      height: clamp(132px, 21vh, 185px);
+      width: clamp(185px, 23vw, 265px);
+      height: clamp(160px, 25vh, 235px);
       background-color: var(--card-bg);
-      border: 6px solid var(--card-border);
-      border-radius: 28px;
+      border: 8px solid var(--card-border);
+      border-radius: 32px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
       transition: transform 0.16s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
+    /* 單組或兩組題目時進一步放大卡片與圖案 */
+    #connect-stage.count-1 .node-card {
+      width: clamp(230px, 27vw, 320px);
+      height: clamp(220px, 38vh, 310px);
+    }
+
+    #connect-stage.count-1 .node-emoji {
+      font-size: clamp(5.8rem, 11vw, 8.2rem);
+    }
+
+    #connect-stage.count-1 .node-label {
+      font-size: clamp(1.65rem, 3vw, 2.2rem);
+    }
+
+    #connect-stage.count-2 .node-card {
+      width: clamp(205px, 24vw, 285px);
+      height: clamp(185px, 29vh, 255px);
+    }
+
+    #connect-stage.count-2 .node-emoji {
+      font-size: clamp(4.8rem, 8.8vw, 6.8rem);
+    }
+
     .node-emoji {
-      font-size: clamp(3.6rem, 6.5vw, 5.2rem);
+      font-size: clamp(4.2rem, 7.6vw, 6rem);
       line-height: 1.05;
       pointer-events: none;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45));
     }
 
     .node-label {
-      font-size: clamp(1.15rem, 2vw, 1.5rem);
+      font-size: clamp(1.3rem, 2.3vw, 1.75rem);
       font-weight: 900;
       color: var(--subtext-color);
-      margin-top: 6px;
+      margin-top: 8px;
       pointer-events: none;
+      letter-spacing: 1px;
     }
 
-    /* 連接端點圓珠（視覺錨點） */
+    /* === 特大發光連接圓珠（視覺錨點） === */
     .anchor-dot {
       position: absolute;
-      width: 30px;
-      height: 30px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       background-color: #FFFF00;
-      border: 4px solid #000000;
+      border: 5px solid #000000;
       top: 50%;
       transform: translateY(-50%);
       pointer-events: none;
-      box-shadow: 0 0 12px rgba(255, 255, 0, 0.8);
+      box-shadow: 0 0 18px rgba(255, 255, 0, 0.95);
     }
 
     .left-node .anchor-dot {
-      right: -18px;
+      right: -25px;
     }
 
     .right-node .anchor-dot {
-      left: -18px;
+      left: -25px;
     }
 
     /* 狀態樣式 */
     .node-card.active-drag {
       border-color: #00FF66 !important;
       transform: scale(1.07);
-      box-shadow: 0 0 34px rgba(0, 255, 102, 0.9);
+      box-shadow: 0 0 40px rgba(0, 255, 102, 0.95);
     }
 
     .node-card.hover-target {
       border-color: #00E5FF !important;
-      background-color: rgba(0, 229, 255, 0.22);
+      background-color: rgba(0, 229, 255, 0.24);
       transform: scale(1.09);
-      box-shadow: 0 0 38px rgba(0, 229, 255, 0.95);
+      box-shadow: 0 0 44px rgba(0, 229, 255, 1);
     }
 
     .node-card.matched {
       border-color: #00FF66 !important;
-      box-shadow: 0 0 26px rgba(0, 255, 102, 0.65);
+      box-shadow: 0 0 32px rgba(0, 255, 102, 0.75);
     }
 
     .node-card.matched .anchor-dot {
       background-color: #00FF66;
+      box-shadow: 0 0 20px #00FF66;
     }
 
     /* 教師設定按鈕（左上角齒輪） */
@@ -341,24 +367,24 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 18px;
+      gap: 20px;
       background: #181E29;
-      border: 3px solid #FFFF00;
-      border-radius: 26px;
-      padding: 18px 32px;
+      border: 4px solid #FFFF00;
+      border-radius: 28px;
+      padding: 20px 36px;
       margin-bottom: 28px;
     }
 
     .demo-box {
-      font-size: 3.4rem;
+      font-size: 4rem;
     }
 
     .demo-line {
-      width: 130px;
-      height: 10px;
-      border-radius: 5px;
+      width: 140px;
+      height: 14px;
+      border-radius: 7px;
       background: linear-gradient(90deg, #FFFF00, #00FF66);
-      box-shadow: 0 0 14px #00FF66;
+      box-shadow: 0 0 18px #00FF66;
     }
 
     .start-actions-row {
@@ -585,7 +611,7 @@
   <!-- 主遊戲區 -->
   <div id="main-container">
     <div id="prompt-banner">由左邊畫一條線去右邊！</div>
-    <div id="connect-stage">
+    <div id="connect-stage" class="count-1">
       <svg id="lines-svg"></svg>
       <div class="column-stack" id="left-col"></div>
       <div class="column-stack" id="right-col"></div>
@@ -595,7 +621,7 @@
   <!-- 啟動畫面 -->
   <div id="start-overlay">
     <h1 style="font-size: 2.6rem; color: #FFFF00; margin: 4px 0;">✨ 光影連連看</h1>
-    <div class="start-subtitle">自由畫出你嘅連線軌跡！只要拉到右邊圖案附近就會自動磁吸成功，<br/>即使畫錯線亦會清晰顯示出來俾你再試！</div>
+    <div class="start-subtitle">特大高對比圖案 ＋ 特粗發光連線軌跡！<br/>自由畫出你嘅連線，靠近右邊圖案即自動磁吸成功！</div>
 
     <div class="demo-diagram">
       <span class="demo-box">🐶</span>
@@ -625,7 +651,7 @@
     <div class="panel-card">
       <div class="panel-header">
         <h2>👩‍🏫 光影連連看 － 教師設定</h2>
-        <span style="font-size: 0.9rem; color: #AAA;">保留真實手繪筆跡 ＋ 寬容磁吸判定</span>
+        <span style="font-size: 0.9rem; color: #AAA;">特大圖案 ＋ 特粗發光軌跡</span>
       </div>
 
       <div class="stats-grid">
@@ -668,8 +694,8 @@
       <div class="setting-group">
         <label>3. 終點磁吸感應範圍（兩點相差不太遠即可自動接通成功）</label>
         <div class="btn-group" data-setting="snapTolerance">
-          <button class="opt-btn active" data-val="110">超寬鬆磁吸（靠近目標周圍一大圈即成功，推薦初學者）</button>
-          <button class="opt-btn" data-val="65">標準磁吸（需拉到目標圖案框附近）</button>
+          <button class="opt-btn active" data-val="120">超寬鬆磁吸（靠近目標周圍一大圈即成功，推薦初學者）</button>
+          <button class="opt-btn" data-val="70">標準磁吸（需拉到目標圖案框附近）</button>
         </div>
       </div>
 
@@ -677,7 +703,7 @@
       <div class="setting-group">
         <label>4. 視覺路徑虛線引導（協助初學者追蹤由左至右軌跡）</label>
         <div class="btn-group" data-setting="showGuideLine">
-          <button class="opt-btn active" data-val="true">顯示發光虛線路徑引導（推薦初學者）</button>
+          <button class="opt-btn active" data-val="true">顯示特粗發光虛線路徑引導（推薦初學者）</button>
           <button class="opt-btn" data-val="false">隱藏虛線（由學生自行尋找對應目標）</button>
         </div>
       </div>
@@ -740,7 +766,7 @@
       { id: 'id_cake', leftEmoji: '🎂', leftName: '蛋糕', rightEmoji: '🎂', rightName: '蛋糕', color: '#FF2A85' }
     ];
 
-    const STORAGE_KEY = 'connect_game_state_v2';
+    const STORAGE_KEY = 'connect_game_state_v3';
 
     let state = {
       settings: {
@@ -748,7 +774,7 @@
         levelMode: 'auto', // 'auto' | 'single1' | 'parallel2' | 'cross2' | 'multi3'
         currentLevel: 'single1',
         streakAtLevel: 0,
-        snapTolerance: 110, // 110 (超寬鬆) | 65 (標準)
+        snapTolerance: 120, // 120 (超寬鬆) | 70 (標準)
         showGuideLine: true,
         theme: 'dark',
         roundLimit: 8
@@ -778,11 +804,11 @@
     const runtime = {
       roundCompleted: 0,
       pairs: [],
-      matchedPaths: new Map(), // pairId -> [{x, y}, ...] 保留學生親手畫出的成功軌跡
-      wrongPaths: [], // [{ id, points: [{x, y}, ...] }] 保留學生畫錯或未連到的軌跡
+      matchedPaths: new Map(), // pairId -> [{x, y}, ...]
+      wrongPaths: [], // [{ id, points: [{x, y}, ...] }]
       selectedLeftId: null,
       activeDragPair: null,
-      currentDragPoints: [], // 學生目前手指正在畫出的軌跡點陣列
+      currentDragPoints: [],
       lastPairId: '',
       isPaused: true,
       autoNextTimer: null
@@ -957,6 +983,8 @@
       const countMap = { single1: 1, parallel2: 2, cross2: 2, multi3: 3 };
       const pairCount = countMap[s.currentLevel] || 1;
 
+      connectStage.className = `count-${pairCount}`;
+
       let candidates = pool.filter(p => p.id !== runtime.lastPairId);
       candidates.sort(() => Math.random() - 0.5);
       const chosen = candidates.slice(0, pairCount);
@@ -1047,7 +1075,6 @@
           renderAllLines();
         });
       } else {
-        // 支援雙重操作：若學生先點左邊、再點右邊卡片也能完成連線
         card.addEventListener('pointerdown', (e) => {
           if (runtime.isPaused || runtime.matchedPaths.has(pair.id)) return;
           e.preventDefault();
@@ -1075,7 +1102,6 @@
     // === 計算兩點距離與感應區檢查 ===
     function isPointNearTargetCard(clientX, clientY, cardEl, tolerancePx) {
       const rRect = cardEl.getBoundingClientRect();
-      // 1. 檢查是否在卡片外擴 tolerancePx 的矩形內
       const insideExpandedBox = (
         clientX >= rRect.left - tolerancePx &&
         clientX <= rRect.right + tolerancePx &&
@@ -1084,10 +1110,9 @@
       );
       if (insideExpandedBox) return true;
 
-      // 2. 額外檢查距離左側連接圓珠的直線距離（方便只拉到圓珠附近）
       const dotX = rRect.left;
       const dotY = rRect.top + rRect.height / 2;
-      return Math.hypot(clientX - dotX, clientY - dotY) <= (tolerancePx + 25);
+      return Math.hypot(clientX - dotX, clientY - dotY) <= (tolerancePx + 30);
     }
 
     // === 全域手指拖拉手繪軌跡追蹤 ===
@@ -1108,7 +1133,7 @@
 
       playDragSparkle();
 
-      const tol = Number(state.settings.snapTolerance) || 110;
+      const tol = Number(state.settings.snapTolerance) || 120;
       document.querySelectorAll('.right-node').forEach(rCard => {
         const pid = rCard.dataset.pairId;
         if (runtime.matchedPaths.has(pid)) return;
@@ -1129,15 +1154,13 @@
 
       document.querySelectorAll('.right-node').forEach(rCard => rCard.classList.remove('hover-target'));
 
-      const tol = Number(state.settings.snapTolerance) || 110;
+      const tol = Number(state.settings.snapTolerance) || 120;
 
-      // 1. 優先檢查放手位置是否靠近「正確目標卡片」（只要兩點唔係爭太遠就自動磁吸成功！）
       const targetRightCard = document.querySelector(`.right-node[data-pair-id="${draggingId}"]`);
       if (targetRightCard && !runtime.matchedPaths.has(draggingId)) {
         if (isPointNearTargetCard(e.clientX, e.clientY, targetRightCard, tol)) {
           const pairObj = runtime.pairs.find(p => p.id === draggingId);
           if (pairObj) {
-            // 保留學生手繪路徑，並將最後一點平滑接駁到右邊目標連接點
             const endAnchor = getAnchorCenter(targetRightCard, 'right');
             drawnPoints.push(endAnchor);
             completePairMatch(pairObj, drawnPoints);
@@ -1146,19 +1169,17 @@
         }
       }
 
-      // 2. 若學生只畫了短短一點（無明顯拖拉），保留選取狀態方便再點右邊圖案
       if (drawnPoints.length >= 2) {
         const firstP = drawnPoints[0];
         const lastP = drawnPoints[drawnPoints.length - 1];
         const totalMove = Math.hypot(lastP.x - firstP.x, lastP.y - firstP.y);
 
         if (totalMove > 35) {
-          // 檢查是否停在某個錯誤的右邊圖案上，把線端接去該錯誤圖案讓學生睇清楚連錯邊個
           let snappedWrongCard = null;
           document.querySelectorAll('.right-node').forEach(rCard => {
             const otherId = rCard.dataset.pairId;
             if (otherId !== draggingId && !runtime.matchedPaths.has(otherId)) {
-              if (isPointNearTargetCard(e.clientX, e.clientY, rCard, 55)) {
+              if (isPointNearTargetCard(e.clientX, e.clientY, rCard, 60)) {
                 snappedWrongCard = rCard;
               }
             }
@@ -1168,7 +1189,6 @@
             drawnPoints.push(getAnchorCenter(snappedWrongCard, 'right'));
           }
 
-          // 保留學生畫出嘅路線，即使錯咗都清晰顯示出嚟！
           recordWrongAttempt(drawnPoints);
         }
       }
@@ -1186,7 +1206,6 @@
       playGentleErrorSound();
       renderAllLines();
 
-      // 2.6 秒後自動淡出該條錯線，保持畫面整潔（學生亦可隨時按「🧹 清除錯線」）
       setTimeout(() => {
         const idx = runtime.wrongPaths.findIndex(w => w.id === wrongId);
         if (idx !== -1) {
@@ -1210,7 +1229,6 @@
       runtime.activeDragPair = null;
       runtime.currentDragPoints = [];
 
-      // 若之前有該題的錯線，自動一併清走
       runtime.wrongPaths = [];
       updateHeaderUI();
 
@@ -1279,7 +1297,7 @@
       }, 2400);
     }
 
-    // === 繪製 SVG 虛線引導、學生手繪路徑（成功／錯線）與即時拖拉軌跡 ===
+    // === 繪製特粗高對比 SVG 虛線引導、學生手繪路徑與發光光暈 ===
     function getAnchorCenter(cardEl, side) {
       const stageRect = connectStage.getBoundingClientRect();
       const cardRect = cardEl.getBoundingClientRect();
@@ -1297,7 +1315,7 @@
       linesSvg.innerHTML = '';
       const isLight = document.body.classList.contains('light-theme');
 
-      // 1. 繪製未完成題目的發光虛線路徑引導（若教師有開啟）
+      // 1. 繪製未完成題目的特粗發光虛線路徑引導
       if (state.settings.showGuideLine) {
         runtime.pairs.forEach(pair => {
           if (runtime.matchedPaths.has(pair.id)) return;
@@ -1313,49 +1331,77 @@
           guide.setAttribute('y1', p1.y);
           guide.setAttribute('x2', p2.x);
           guide.setAttribute('y2', p2.y);
-          guide.setAttribute('stroke', isLight ? 'rgba(0, 40, 104, 0.22)' : 'rgba(255, 255, 0, 0.28)');
-          guide.setAttribute('stroke-width', '8');
-          guide.setAttribute('stroke-dasharray', '16 14');
+          guide.setAttribute('stroke', isLight ? 'rgba(0, 40, 104, 0.28)' : 'rgba(255, 255, 0, 0.36)');
+          guide.setAttribute('stroke-width', '13');
+          guide.setAttribute('stroke-dasharray', '22 18');
           guide.setAttribute('stroke-linecap', 'round');
           linesSvg.appendChild(guide);
         });
       }
 
-      // 2. 繪製學生畫錯或未連到的手繪路線（清晰保留讓學生看見自己的軌跡）
+      // 2. 繪製學生畫錯或未連到的特粗手繪路線
       runtime.wrongPaths.forEach(wItem => {
         if (!wItem.points || wItem.points.length < 2) return;
         const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
         poly.setAttribute('points', pointsToSvgString(wItem.points));
         poly.setAttribute('fill', 'none');
         poly.setAttribute('stroke', isLight ? '#FF6B00' : '#FF9500');
-        poly.setAttribute('stroke-width', '10');
+        poly.setAttribute('stroke-width', '16');
         poly.setAttribute('stroke-linecap', 'round');
         poly.setAttribute('stroke-linejoin', 'round');
-        poly.setAttribute('opacity', '0.88');
+        poly.setAttribute('opacity', '0.92');
         linesSvg.appendChild(poly);
       });
 
-      // 3. 繪製已成功配對的學生親手畫出路線（自動磁吸接通兩端並轉為高亮綠色）
+      // 3. 繪製已成功配對的特粗發光連線（外層光暈 ＋ 內層實線）
       runtime.matchedPaths.forEach((pts, pid) => {
         if (!pts || pts.length < 2) return;
         const pair = runtime.pairs.find(p => p.id === pid);
+        const lineColor = isLight ? '#009933' : (pair ? pair.color : '#00FF66');
+
+        if (!isLight) {
+          const glowPoly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+          glowPoly.setAttribute('points', pointsToSvgString(pts));
+          glowPoly.setAttribute('fill', 'none');
+          glowPoly.setAttribute('stroke', lineColor);
+          glowPoly.setAttribute('stroke-width', '34');
+          glowPoly.setAttribute('stroke-linecap', 'round');
+          glowPoly.setAttribute('stroke-linejoin', 'round');
+          glowPoly.setAttribute('opacity', '0.28');
+          linesSvg.appendChild(glowPoly);
+        }
+
         const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
         poly.setAttribute('points', pointsToSvgString(pts));
         poly.setAttribute('fill', 'none');
-        poly.setAttribute('stroke', isLight ? '#009933' : (pair ? pair.color : '#00FF66'));
-        poly.setAttribute('stroke-width', '13');
+        poly.setAttribute('stroke', lineColor);
+        poly.setAttribute('stroke-width', '22');
         poly.setAttribute('stroke-linecap', 'round');
         poly.setAttribute('stroke-linejoin', 'round');
         linesSvg.appendChild(poly);
       });
 
-      // 4. 繪製手指正在即時畫出的自由手繪曲線
+      // 4. 繪製手指正在即時畫出的特粗發光曲線（外層光暈 ＋ 內層實線）
       if (runtime.activeDragPair && runtime.currentDragPoints.length >= 2) {
+        const dragColor = isLight ? '#0055FF' : '#00E5FF';
+
+        if (!isLight) {
+          const dragGlow = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+          dragGlow.setAttribute('points', pointsToSvgString(runtime.currentDragPoints));
+          dragGlow.setAttribute('fill', 'none');
+          dragGlow.setAttribute('stroke', dragColor);
+          dragGlow.setAttribute('stroke-width', '34');
+          dragGlow.setAttribute('stroke-linecap', 'round');
+          dragGlow.setAttribute('stroke-linejoin', 'round');
+          dragGlow.setAttribute('opacity', '0.32');
+          linesSvg.appendChild(dragGlow);
+        }
+
         const dragPoly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
         dragPoly.setAttribute('points', pointsToSvgString(runtime.currentDragPoints));
         dragPoly.setAttribute('fill', 'none');
-        dragPoly.setAttribute('stroke', isLight ? '#0055FF' : '#00E5FF');
-        dragPoly.setAttribute('stroke-width', '13');
+        dragPoly.setAttribute('stroke', dragColor);
+        dragPoly.setAttribute('stroke-width', '20');
         dragPoly.setAttribute('stroke-linecap', 'round');
         dragPoly.setAttribute('stroke-linejoin', 'round');
         linesSvg.appendChild(dragPoly);
@@ -1367,7 +1413,7 @@
       for (let i = 0; i < 16; i++) {
         const p = document.createElement('div');
         p.className = 'particle';
-        const size = 12 + Math.random() * 12;
+        const size = 14 + Math.random() * 14;
         p.style.width = `${size}px`;
         p.style.height = `${size}px`;
         p.style.backgroundColor = colors[i % colors.length];
@@ -1376,7 +1422,7 @@
         document.body.appendChild(p);
 
         const angle = (Math.PI * 2 * i) / 16;
-        const dist = 80 + Math.random() * 120;
+        const dist = 80 + Math.random() * 130;
         p.animate([
           { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
           { transform: `translate(calc(-50% + ${Math.cos(angle) * dist}px), calc(-50% + ${Math.sin(angle) * dist}px)) scale(0.2)`, opacity: 0 }
