@@ -236,7 +236,7 @@
       gap: 8px;
     }
 
-    /* === 特大高對比圖案卡片（依據 1/2/3 組題目與螢幕高度自動調整大小） === */
+    /* === 特大高對比圖案卡片 === */
     .node-card {
       position: relative;
       background-color: var(--card-bg);
@@ -348,6 +348,39 @@
     .node-card.matched .anchor-dot {
       background-color: #00FF66;
       box-shadow: 0 0 20px #00FF66;
+    }
+
+    /* === 過關後「➡️ 下一題」特大按鈕 === */
+    #next-question-bar {
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 40;
+      display: none;
+    }
+
+    #next-question-btn {
+      background: #00FF66;
+      color: #000000;
+      border: 5px solid #000000;
+      border-radius: 28px;
+      padding: 16px 42px;
+      font-size: clamp(1.45rem, 2.8vw, 2rem);
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 0 34px rgba(0, 255, 102, 0.9), 0 8px 24px rgba(0, 0, 0, 0.65);
+      white-space: nowrap;
+      animation: pulseNext 1.2s infinite ease-in-out;
+    }
+
+    #next-question-btn:active {
+      transform: scale(0.95);
+    }
+
+    @keyframes pulseNext {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
 
     /* 教師設定按鈕（左上角齒輪） */
@@ -664,6 +697,11 @@
     </div>
   </div>
 
+  <!-- 過關後手動／即時跳去下一題按鈕 -->
+  <div id="next-question-bar">
+    <button id="next-question-btn">➡️ 下一題</button>
+  </div>
+
   <!-- 啟動畫面 -->
   <div id="start-overlay">
     <h1 style="font-size: 2.5rem; color: #FFFF00; margin: 4px 0;">✨ 光影連連看</h1>
@@ -677,7 +715,7 @@
 
     <div class="start-actions-row">
       <button class="big-start-btn" id="start-btn">▶️ 立即開始連線</button>
-      <button class="secondary-setup-btn" id="start-setup-btn">⚙️ 調整難度、磁吸寬容度與配對類型</button>
+      <button class="secondary-setup-btn" id="start-setup-btn">⚙️ 調整難度、過關切換與配對類型</button>
     </div>
   </div>
 
@@ -763,9 +801,18 @@
         </div>
       </div>
 
-      <!-- 6. 每回合題數 -->
+      <!-- 6. 過關跳去下一題方式 -->
       <div class="setting-group">
-        <label>6. 每回合題數</label>
+        <label>6. 過關跳去下一題方式（可選自動停留 4 秒或手動按鍵切換）</label>
+        <div class="btn-group" data-setting="advanceMode">
+          <button class="opt-btn active" data-val="auto4">自動過關（完成後停留 4 秒自動跳去下一題）</button>
+          <button class="opt-btn" data-val="manual">手動按「➡️ 下一題」按鈕（方便老師講解或由學生自行點擊過關）</button>
+        </div>
+      </div>
+
+      <!-- 7. 每回合題數 -->
+      <div class="setting-group">
+        <label>7. 每回合題數</label>
         <div class="btn-group" data-setting="roundLimit">
           <button class="opt-btn" data-val="5">每 5 題暫停</button>
           <button class="opt-btn active" data-val="8">每 8 題暫停</button>
@@ -812,7 +859,7 @@
       { id: 'id_cake', leftEmoji: '🎂', leftName: '蛋糕', rightEmoji: '🎂', rightName: '蛋糕', color: '#FF2A85' }
     ];
 
-    const STORAGE_KEY = 'connect_game_state_v3';
+    const STORAGE_KEY = 'connect_game_state_v4';
 
     let state = {
       settings: {
@@ -823,6 +870,7 @@
         snapTolerance: 120, // 120 (超寬鬆) | 70 (標準)
         showGuideLine: true,
         theme: 'dark',
+        advanceMode: 'auto4', // 'auto4' (停留4秒自動過關) | 'manual' (手動按下一題按鈕)
         roundLimit: 8
       },
       stats: {
@@ -857,6 +905,7 @@
       currentDragPoints: [],
       lastPairId: '',
       isPaused: true,
+      isEndOfRoundPending: false,
       autoNextTimer: null
     };
 
@@ -869,6 +918,8 @@
     const levelBadge = document.getElementById('level-badge');
     const progressBarContainer = document.getElementById('progress-bar-container');
     const clearWrongBtn = document.getElementById('clear-wrong-btn');
+    const nextQuestionBar = document.getElementById('next-question-bar');
+    const nextQuestionBtn = document.getElementById('next-question-btn');
 
     loadState();
 
@@ -1019,6 +1070,8 @@
         clearTimeout(runtime.autoNextTimer);
         runtime.autoNextTimer = null;
       }
+      runtime.isEndOfRoundPending = false;
+      nextQuestionBar.style.display = 'none';
 
       const s = state.settings;
       if (s.levelMode !== 'auto') {
@@ -1302,6 +1355,24 @@
       }
     }
 
+    function proceedToNextStep() {
+      if (runtime.autoNextTimer) {
+        clearTimeout(runtime.autoNextTimer);
+        runtime.autoNextTimer = null;
+      }
+      nextQuestionBar.style.display = 'none';
+      if (runtime.isEndOfRoundPending) {
+        showRoundBreak();
+      } else {
+        generateLevel();
+      }
+    }
+
+    nextQuestionBtn.addEventListener('click', () => {
+      initAudio();
+      proceedToNextStep();
+    });
+
     function handleAllMatched() {
       const s = state.settings;
       state.stats.totalCompleted += 1;
@@ -1333,14 +1404,18 @@
         speakCantonese('做得好！全部都連啱晒啦！');
       }
 
-      const isEndOfRound = (s.roundLimit > 0 && runtime.roundCompleted >= s.roundLimit);
-      runtime.autoNextTimer = setTimeout(() => {
-        if (isEndOfRound) {
-          showRoundBreak();
-        } else {
-          generateLevel();
-        }
-      }, 2400);
+      runtime.isEndOfRoundPending = (s.roundLimit > 0 && runtime.roundCompleted >= s.roundLimit);
+
+      // 無論自動或手動模式，都顯示「➡️ 下一題」特大按鈕（方便隨時手動按下一題）
+      nextQuestionBtn.textContent = runtime.isEndOfRoundPending ? '🏆 查看本回合獎勵' : '➡️ 下一題';
+      nextQuestionBar.style.display = 'block';
+
+      if (s.advanceMode === 'auto4') {
+        // 停留 4 秒後自動跳去下一題
+        runtime.autoNextTimer = setTimeout(() => {
+          proceedToNextStep();
+        }, 4000);
+      }
     }
 
     // === 繪製特粗高對比 SVG 虛線引導、學生手繪路徑與發光光暈 ===
@@ -1484,6 +1559,7 @@
       runtime.isPaused = true;
       if (runtime.autoNextTimer) clearTimeout(runtime.autoNextTimer);
       if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      nextQuestionBar.style.display = 'none';
       document.getElementById('break-overlay').style.display = 'none';
       document.getElementById('teacher-panel').style.display = 'none';
       document.getElementById('start-overlay').style.display = 'flex';
@@ -1501,6 +1577,7 @@
 
     function showRoundBreak() {
       runtime.isPaused = true;
+      nextQuestionBar.style.display = 'none';
       playMatchSuccessSound();
       speakCantonese('做得好！完成一回合連線訓練啦，休息一陣先！');
 
